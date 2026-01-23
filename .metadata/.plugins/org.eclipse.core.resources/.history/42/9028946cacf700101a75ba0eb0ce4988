@@ -1,0 +1,5 @@
+package sk.com.ecommerce.order_service.feignClient;
+
+public interface PaymentClient {
+
+}

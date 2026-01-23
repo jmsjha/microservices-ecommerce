@@ -1,0 +1,7 @@
+package sk.com.ecommerce.payment_service.feignclient;
+
+
+@FeignClient(name = "PAYMENT-SERVICE")
+public class PaymentClient {
+
+}

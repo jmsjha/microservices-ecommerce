@@ -1,0 +1,10 @@
+package sk.com.ecommerce.payment_service;
+
+@SpringBootTest
+class PaymentServiceApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}

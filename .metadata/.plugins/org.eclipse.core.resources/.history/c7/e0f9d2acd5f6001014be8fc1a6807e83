@@ -1,0 +1,5 @@
+package sk.com.example.inventory_service.model;
+
+public class OrderEvent {
+
+}

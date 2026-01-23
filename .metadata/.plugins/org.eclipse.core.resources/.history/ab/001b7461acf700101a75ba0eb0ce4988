@@ -1,0 +1,11 @@
+package sk.com.ecommerce.order_service.feignClient;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.*;
+
+@FeignClient(name = "PAYMENT-SERVICE")
+public interface PaymentClient {
+
+    @PostMapping("/api/payment/process")
+    String processPayment(@RequestParam Long orderId);
+}

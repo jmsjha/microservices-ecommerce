@@ -1,0 +1,25 @@
+package sk.com.ecommerce.order_service.model;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.*;
+
+@Entity
+//@Entity marks this class as a JPA entity (table mapping)
+@Table(name="orders")
+//@Table defines DB table name
+
+public class Order {
+	
+	@Id
+	//Id = Primary key
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	//Auto -increment ID
+	private Long id;
+	private Long userId;
+	private Long productId;
+	private int quantity;
+	private String status;
+	
+	
+
+}

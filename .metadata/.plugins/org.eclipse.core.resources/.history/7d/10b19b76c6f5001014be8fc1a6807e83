@@ -1,0 +1,8 @@
+package sk.com.ecommerce.order_service.dto;
+
+public class OrderRequest {
+	 // DTO prevents exposing entity directly
+    private Long userId;
+    private Long productId;
+    private int quantity;
+}

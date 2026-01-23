@@ -1,0 +1,100 @@
+package sk.com.ecommerce.order_service.service;
+
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Service;
+
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
+import sk.com.ecommerce.common.event.OrderEvent;
+import sk.com.ecommerce.order_service.dto.OrderRequest;
+import sk.com.ecommerce.order_service.feignClient.PaymentClient;
+import sk.com.ecommerce.order_service.model.Order;
+import sk.com.ecommerce.order_service.repository.OrderRepository;
+
+@Service
+public class OrderService {
+
+	private final OrderRepository orderRepository;
+	private final KafkaTemplate<String, Object> kafkaTemplate;
+	private final PaymentClient paymentClient;
+
+	public OrderService(OrderRepository repository, KafkaTemplate<String, Object> kafkaTemplate,
+			PaymentClient paymentClient) {
+		this.orderRepository = repository;
+		this.kafkaTemplate = kafkaTemplate;
+		this.paymentClient = paymentClient;
+
+	}
+
+	// ش
+	/**
+	 * This method: 1. Calls Payment Service synchronously via Feign 2. Applies
+	 * Circuit Breaker 3. Applies Retry 4. Uses fallback if Payment Service fails or
+	 * circuit is OPEN
+	 */
+	@CircuitBreaker(name = "paymentService", fallbackMethod = "paymentFallback")
+	@Retry(name = "paymentService")
+	public Order createOrder(OrderRequest request) {
+		Order order = new Order();
+
+		order.setUserId(request.getUserId());
+		order.setProductId(request.getProductId());
+		order.setQuantity(request.getQuantity());
+		order.setStatus("CREATED");
+
+		Order savedOrder = orderRepository.save(order);
+		System.out.println("Order saved with ID: " + savedOrder.getId());
+
+		// call PAYMENT-SERVICE (SYNC)
+		String paymentResponse = paymentClient.processPayment(savedOrder.getId());
+		System.out.println("PROCESSED PAYMENT RESPONSE: " + paymentResponse);
+		savedOrder.setStatus("PAID");
+
+		// CREATE EVENT OBJECT
+//        OrderEvent event = new OrderEvent(
+//                savedOrder.getId(),
+//                savedOrder.getUserId(),
+//                savedOrder.getProductId(),
+//                savedOrder.getQuantity(),
+//                savedOrder.getStatus()
+//        );
+
+		OrderEvent event = new OrderEvent();
+		event.setId(savedOrder.getId());
+		event.setUserId(savedOrder.getUserId());
+		event.setProductId(savedOrder.getProductId());
+		event.setQuantity(savedOrder.getQuantity());
+		event.setStatus(savedOrder.getStatus());
+
+		// ✅ SEND EVENT (NOT ENTITY)
+		kafkaTemplate.send("order-events", event);
+		return savedOrder;
+	}
+
+	/**
+	 * FALLBACK METHOD ---------------- This method is called when: - Payment
+	 * Service is DOWN - Circuit is OPEN - All retries are exhausted
+	 *
+	 * Signature RULE: - Same parameters as original method - PLUS Exception as last
+	 * argument
+	 */
+	/*
+	 * Fallback method must have: Same return type Same parameters + Exception as
+	 * last parameter
+	 * “Fallback must match method signature exactly, otherwise Resilience4j fails at runtime.”
+	 */
+	public Order paymentFallback(OrderRequest request, Exception ex) {
+
+		// Log for monitoring
+		System.out.println("Payment service failed, using fallback: " + ex.getMessage());
+
+		Order failedOrder = new Order();
+		failedOrder.setUserId(request.getUserId());
+		failedOrder.setProductId(request.getProductId());
+		failedOrder.setQuantity(request.getQuantity());
+		failedOrder.setStatus("PAYMENT_FAILED");
+
+		return failedOrder;
+	}
+
+}

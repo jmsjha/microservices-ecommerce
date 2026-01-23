@@ -1,0 +1,11 @@
+package sk.com.ecommerce.payment_service.controller;
+
+@RestController
+@RequestMapping("/api/payment")
+public class PaymentController {
+
+    @PostMapping("/process")
+    public String processPayment(@RequestParam Long orderId) {
+        return "PAYMENT SUCCESS FOR ORDER " + orderId;
+    }
+}

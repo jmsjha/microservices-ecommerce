@@ -1,0 +1,39 @@
+package sk.com.ecommerce.order_service.service;
+
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Service;
+
+import sk.com.ecommerce.order_service.dto.OrderRequest;
+import sk.com.ecommerce.order_service.model.Order;
+import sk.com.ecommerce.order_service.repository.OrderRepository;
+
+@Service
+public class OrderService {
+
+	
+	private OrderRepository orderRepository = null;
+	private final KafkaTemplate<String, Object> kafkaTemplate;
+
+    public OrderService(OrderRepository repository,
+                        KafkaTemplate<String, Object> kafkaTemplate) {
+        this.orderRepository = repository;
+        this.kafkaTemplate = kafkaTemplate;
+    }
+
+    public Order createOrder(OrderRequest request) {
+        Order order = new Order();
+        order.setUserId(request.getUserId());
+        order.setProductId(request.getProductId());
+        order.setQuantity(request.getQuantity());
+        //order.setStatus("CREATED");
+
+        Order savedOrder = repository.save(order);
+
+        kafkaTemplate.send("order-events", savedOrder);
+
+        return savedOrder;
+    }
+	
+	
+	
+}

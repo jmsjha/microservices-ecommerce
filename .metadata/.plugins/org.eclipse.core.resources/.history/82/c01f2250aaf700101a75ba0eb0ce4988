@@ -1,0 +1,5 @@
+package sk.com.ecommerce.payment_service.controller;
+
+public class PaymentController {
+
+}
