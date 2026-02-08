@@ -1,5 +1,0 @@
-package sk.com.ecommerce.common.event;
-
-public class OrderEvent {
-
-}

@@ -2,8 +2,8 @@
 <section name="Workbench">
 	<section name="MavenProjectImportWizardPage">
 		<list key="rootDirectory">
-			<item value="/Users/sumu/EcommerceMircosoft/inventory-service"/>
-			<item value="/Users/sumu/EcommerceMircosoft/order-service"/>
+			<item value="/Users/sumu/project_java/microservices-ecommerce/order-service"/>
+			<item value="/Users/sumu/project_java/microservices-ecommerce"/>
 		</list>
 		<list key="projectNameTemplate">
 			<item value="[artifactId]"/>
@@ -14,13 +14,9 @@
 			<item value="[name]"/>
 		</list>
 	</section>
-	<section name="org.eclipse.m2e.core.pom.overview">
-	</section>
-	<section name="org.eclipse.m2e.core.pom.dependencies">
-	</section>
 	<section name="MavenProjectWizardLocationPage">
 		<list key="location">
-			<item value="/Users/sumu/EcommerceMircosoft"/>
+			<item value="/Users/sumu/project_java/microservices-ecommerce/api-gateway"/>
 		</list>
 		<list key="projectNameTemplate">
 			<item value="[artifactId]"/>
@@ -63,14 +59,10 @@
 	</section>
 	<section name="MavenProjectWizardArtifactPage">
 		<list key="groupId">
-			<item value="sk.com.ecommerce"/>
 		</list>
 		<list key="name">
-			<item value="ecommerce-common"/>
-			<item value="ecommerce-common&#x0A;"/>
 		</list>
 		<list key="artifactId">
-			<item value="ecommerce-common"/>
 		</list>
 		<list key="projectNameTemplate">
 			<item value="[artifactId]"/>
@@ -84,23 +76,16 @@
 			<item value="0.0.1-SNAPSHOT"/>
 		</list>
 	</section>
-	<section name="org.eclipse.m2e.core.ui.internal.dialogs.MavenRepositorySearchDialog">
-		<item key="width" value="480"/>
-		<item key="height" value="491"/>
-		<item key="x" value="480"/>
-		<item key="y" value="35"/>
+	<section name="org.eclipse.m2e.core.pom.overview">
+		<list key="ciManagementUrl">
+		</list>
+		<list key="ciManagementSystem">
+		</list>
+		<list key="issueManagementSystem">
+		</list>
+		<list key="issueManagementUrl">
+		</list>
 	</section>
-	<section name="wizardPage">
-		<list key="groupId">
-			<item value="payment-service"/>
-		</list>
-		<list key="name">
-		</list>
-		<list key="artifactId">
-			<item value="payment-service"/>
-		</list>
-		<list key="version">
-			<item value="0.0.1-SNAPSHOT"/>
-		</list>
+	<section name="org.eclipse.m2e.core.pom.dependencies">
 	</section>
 </section>
